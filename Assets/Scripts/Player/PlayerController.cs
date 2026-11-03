@@ -173,6 +173,7 @@ public class PlayerController : MonoBehaviour
         {
             anim.SetTrigger("attack");
         }
+        anim.SetFloat("YVel", rb.linearVelocityY);
     }
 
     void SpriteFlip(float moveX) => sr.flipX = (moveX < 0f);
