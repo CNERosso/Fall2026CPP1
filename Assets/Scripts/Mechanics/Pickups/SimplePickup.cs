@@ -24,9 +24,15 @@ public class SimplePickup : MonoBehaviour
                     break;
 
 
+<<<<<<< HEAD
                 //case PickupType.JumpBoost:
                 //    controller.JumpForceChange();
                 //    break;
+=======
+                case PickupType.JumpBoost:
+                    controller.JumpForceChange();
+                    break;
+>>>>>>> 9275bdb47d3a6265590344d1bff4584853b89462
             }
 
             Destroy(gameObject);
