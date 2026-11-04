@@ -8,6 +8,57 @@ public class PlayerController : MonoBehaviour
     public float moveSpeed = 5f;
     public float jumpForce = 5f;
     public int maxJumps = 2;
+    private int _lives = 3; //internal lives value
+    [SerializeField] private int maxLives = 9;
+    public int lives
+    {
+        get { return _lives; }
+        set
+        {
+            if (value >  maxLives)
+            {
+                _lives = value;
+            }
+            else if (value < 0)
+            {
+                _lives = 0;
+                //go to game over
+            }
+            else if (_lives > value)
+            {
+                _lives = value;
+                //respawn goes here
+            }
+            else
+            {
+                _lives = value;
+            }
+            Debug.Log($"lives were changed to {_lives}");
+        }
+    }
+
+    //C++ style getter/setter
+    //public void SetLives(int lifeValue)
+  //  {
+    //    if (lifeValue > maxLives)
+       // {
+      //      lives = maxLives;
+      //  }
+      //  else if (lifeValue < 0)
+       // {
+       //     lives = 0;
+            //gameover triggers here
+      //  }
+      //  else if (lives > lifeValue)
+      //  {
+      //      lives = lifeValue;
+      //  }
+ //   }
+
+   // public int GetLives()
+   // {  
+   //     return lives; 
+  //  }
     #endregion
 
     #region Component References
@@ -20,7 +71,13 @@ public class PlayerController : MonoBehaviour
 
     #region Properties
     private int currentJumps = 0;
+    private float currentPowerupDuration = 0;
+    private float initialJumpForce;
+    public int initialpowerupDuration;
+
+    private Coroutine jumpForceCoroutine = null;
     #endregion
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -34,6 +91,7 @@ public class PlayerController : MonoBehaviour
         gndChk.Init(bc, rb);
 
         rb.sleepMode = RigidbodySleepMode2D.NeverSleep;
+        initialJumpForce = jumpForce;
     }
 
     // Update is called once per frame
@@ -80,4 +138,23 @@ public class PlayerController : MonoBehaviour
     //        sr.flipX = !sr.flipX;
     //    }
     //}
+
+    public void JumpForceChange ()
+    {
+        if (jumpForceCoroutine  != null)
+        {
+            StopCoroutine(jumpForceCoroutine);
+            jumpForceCoroutine = null;
+            jumpForce = initialJumpForce;
+        }
+        jumpForceCoroutine = StartCoroutine(JumpForceChangeCoroutine());
+
+    }
+    IEnumerator JumpForceChangeCoroutine()
+    {
+        currentPowerupDuration = initialpowerupDuration + currentPowerupDuration;
+        jumpForce = 15;
+
+        yield return new WaitForSeconds(currentPowerupDuration);
+    }
 }
